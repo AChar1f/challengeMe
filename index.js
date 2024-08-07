@@ -59,6 +59,44 @@ router.get("/user/:userID", (req, res) => {
     });
   }
 });
+router.get('/products', (req, res) => {
+    try {
+        const strQry = `
+        select * from Products
+        `
+    db.query(strQry, (err, results) => {
+        if (err) throw new Error('We ran into issues while fetching products')
+            res.json({
+                status: res.statusCode,
+                results
+            })
+    })
+    } catch (e) {
+        res.json({
+            status: 404,
+            msg: e.message
+        })
+    }
+})
+router.get('/product/:prodID', (req, res) => {
+    try {
+        const strQry = `
+        select * from Products where prodID = ${req.params.prodID}
+        `
+    db.query(strQry, (err, result) => {
+        if (err) throw new Error('We ran into issues while fetching the product.')
+            res.json({
+                status: res.statusCode,
+                result
+            })
+    })
+    } catch (e) {
+        res.json({
+            status: 404,
+            msg: e.message
+        })
+    }
+})
 app.listen(port, () => {
   console.log(`Ayo, We live on Port ${port}`);
 });

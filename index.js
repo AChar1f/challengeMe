@@ -120,7 +120,7 @@ app.post('/register', (req, res) => {
 })
 app.delete('/user/delete/:userID', (req, res) => {
     try {
-        const id = parseInt(req.params.userID)
+        const id = +req.params.userID
         const strQry = `
         delete from Users where userID =${id}
         `
@@ -129,6 +129,48 @@ app.delete('/user/delete/:userID', (req, res) => {
                 res.json({
                     status: res.statusCode,
                     msg: "User deleted Successfully",
+                    result
+                })
+        })
+    } catch (e) {
+        res.json({
+            status: 404,
+            msg: e.message
+        })
+    }
+})
+app.post('/addProduct', (req, res) => {
+    try {
+        const {prodName, prodQuantity, prodPrice, prodURL} = req.body
+        const strQry =  `
+        insert into Products(prodName, prodQuantity, prodPrice, prodURL, userID)
+        values(?, ?, ?, ?, ?);
+        `
+    db.query(strQry, [prodName, prodQuantity, prodPrice, prodURL], (err, result) => {
+        if (err) throw new Error('Unable to add product.')
+        res.json({
+            status: res.statusCode,
+            result
+        })
+    })
+    } catch (e) {
+        res.json({
+            status: 404,
+            msg: e.message
+        })
+    }
+})
+app.delete('/product/delete/:prodID', (req, res) => {
+    try {
+        const id = +req.params.prodID
+        const strQry = `
+        delete from Products where prodID = ${id}
+        `
+        db.query(strQry, (err, result) => {
+            if(err) throw new Error('Unable to delete Product')
+                res.json({
+                    status: res.statusCode,
+                    msg: "Product deleted Successfully",
                     result
                 })
         })

@@ -97,6 +97,27 @@ router.get('/product/:prodID', (req, res) => {
         })
     }
 })
+app.post('/register', (req, res) => {
+    try {
+        const {username, usersurname, userAge, userEmail, userPwd} = req.body
+        const strQry =  `
+        insert into Users(username, usersurname, userAge, userEmail, userPwd)
+        values(?, ?, ?, ?, ?);
+        `
+    db.query(strQry, [username, usersurname, userAge, userEmail, userPwd], (err, result) => {
+        if (err) throw new Error('Unable to register user.')
+        res.json({
+            status: res.statusCode,
+            result
+        })
+    })
+    } catch (e) {
+        res.json({
+            status: 404,
+            msg: e.message
+        })
+    }
+})
 app.listen(port, () => {
   console.log(`Ayo, We live on Port ${port}`);
 });

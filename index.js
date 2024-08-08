@@ -118,6 +118,27 @@ app.post('/register', (req, res) => {
         })
     }
 })
+app.delete('/user/delete/:userID', (req, res) => {
+    try {
+        const id = parseInt(req.params.userID)
+        const strQry = `
+        delete from Users where userID =${id}
+        `
+        db.query(strQry, (err, result) => {
+            if(err) throw new Error('Unable to delete User')
+                res.json({
+                    status: res.statusCode,
+                    msg: "User deleted Successfully",
+                    result
+                })
+        })
+    } catch (e) {
+        res.json({
+            status: 404,
+            msg: e.message
+        })
+    }
+})
 app.listen(port, () => {
   console.log(`Ayo, We live on Port ${port}`);
 });
